@@ -49,13 +49,14 @@ public class ProjetoController {
   // Rota para listar todos os projetos
   @GetMapping
   public List<Projeto> listarProjetos() {
-      return projetoRepository.listarProjetos();
+    return projetoRepository.listarProjetos();
   }
 
   // Rota para buscar um projeto específico pelo ID
-  @GetMapping("/{id}")
+  @GetMapping("/{codigo}")
   public Optional<Projeto> buscarProjetoPorId(@PathVariable Long codigo) {
-      return projetoRepository.buscarProjetoPorCodigo(codigo);
+    System.out.println("Buscando projeto com o código: " + codigo);
+    return projetoRepository.buscarProjetoPorCodigo(codigo);
   }
 
 }
