@@ -6,12 +6,13 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
+import br.com.devweb.camadas.interfaces.ProjetoRepositoryInterface;
 import br.com.devweb.camadas.models.Projeto;
 import lombok.Data;
 
 @Data
 @Repository
-public class ProjetoRepository {
+public class ProjetoRepository implements ProjetoRepositoryInterface{
   
   private List<Projeto> projetos = new ArrayList<>();
 

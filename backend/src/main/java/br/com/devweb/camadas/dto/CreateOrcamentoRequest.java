@@ -9,4 +9,5 @@ public class CreateOrcamentoRequest {
   public String nome_empresa;
   public String descricao;
   public Double valor;
+  public String status_pagamento;
 }

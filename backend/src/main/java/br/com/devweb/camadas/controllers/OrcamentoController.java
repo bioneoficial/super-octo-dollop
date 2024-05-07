@@ -16,22 +16,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.devweb.camadas.data.OrcamentoRepository;
 import br.com.devweb.camadas.dto.CreateOrcamentoRequest;
 import br.com.devweb.camadas.enums.StatusPagamento;
+import br.com.devweb.camadas.interfaces.OrcamentoRepositoryInterface;
 import br.com.devweb.camadas.models.Orcamento;
 
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("api-v1-0/orcamentos")
 public class OrcamentoController {
-    @Autowired
-  private OrcamentoRepository orcamentoRepository;
+  
+  @Autowired
+  private OrcamentoRepositoryInterface orcamentoRepository;
 
   @PostMapping
   public ResponseEntity<String> adicionarOrcamento(@RequestBody CreateOrcamentoRequest orcamento) {
-    Orcamento budget = new Orcamento(orcamentoRepository.getId() + 1, orcamento.getNome_empresa(), orcamento.getDescricao(), orcamento.getValor(), StatusPagamento.PENDENTE.toString());
-
+    Orcamento budget = new Orcamento(orcamentoRepository.getId() + 1, orcamento.getNome_empresa(), orcamento.getDescricao(), orcamento.getValor(), orcamento.getStatus_pagamento());
     orcamentoRepository.adicionarOrcamento(budget);
     return ResponseEntity.status(HttpStatus.CREATED).body("Orcamento adicionado com sucesso");
   }

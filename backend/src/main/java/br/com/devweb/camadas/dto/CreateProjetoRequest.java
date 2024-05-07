@@ -11,4 +11,5 @@ public class CreateProjetoRequest {
   public String descricao;
   public String data_inicio;
   public String termino;
+  public String status;
 }

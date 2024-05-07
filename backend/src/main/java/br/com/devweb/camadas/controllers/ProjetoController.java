@@ -3,13 +3,14 @@ package br.com.devweb.camadas.controllers;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import br.com.devweb.camadas.data.ProjetoRepository;
+// import br.com.devweb.camadas.data.ProjetoRepository;
 import br.com.devweb.camadas.dto.CreateProjetoRequest;
 import br.com.devweb.camadas.enums.StatusProjeto;
+import br.com.devweb.camadas.interfaces.ProjetoRepositoryInterface;
 import br.com.devweb.camadas.models.Projeto;
+import br.com.devweb.camadas.services.ProjetoService;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -17,24 +18,19 @@ import br.com.devweb.camadas.models.Projeto;
 public class ProjetoController {
 
   @Autowired
-  private ProjetoRepository projetoRepository;
+  private ProjetoService projetoService;
+
+  @Autowired
+  private ProjetoRepositoryInterface projetoRepository;
 
   @PostMapping
   public ResponseEntity<String> adicionarProjeto(@RequestBody CreateProjetoRequest projeto) {
-    Projeto proj = new Projeto(projetoRepository.getId() + 1, projeto.getNome(), projeto.getDescricao(), projeto.getData_inicio(), projeto.getTermino(), StatusProjeto.PENDENTE.toString());
-    projetoRepository.adicionarProjeto(proj);
-    return ResponseEntity.status(HttpStatus.CREATED).body("Projeto adicionado com sucesso");
+    return projetoService.adicionarProjeto(projeto);
   }
 
   @DeleteMapping("/{codigo}")
   public ResponseEntity<String> removerProjeto(@PathVariable Long codigo) {
-    Optional<Projeto> projeto = projetoRepository.buscarProjetoPorCodigo(codigo);
-    if (projeto.isPresent()) {
-      projetoRepository.removerProjeto(projeto.get());
-      return ResponseEntity.ok("Projeto removido com sucesso");
-    } else {
-      return ResponseEntity.notFound().build();
-    }
+    return projetoService.removerProjeto(codigo);
   }
 
   @GetMapping

@@ -6,12 +6,13 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
+import br.com.devweb.camadas.interfaces.OrcamentoRepositoryInterface;
 import br.com.devweb.camadas.models.Orcamento;
 import lombok.Data;
 
 @Data
 @Repository
-public class OrcamentoRepository {
+public class OrcamentoRepository implements OrcamentoRepositoryInterface {
   private List<Orcamento> orcamentos = new ArrayList<>();
 
   public void adicionarOrcamento(Orcamento orcamento) {
