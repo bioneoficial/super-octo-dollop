@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import br.com.devweb.camadas.dto.CreateProjetoRequest;
 import br.com.devweb.camadas.enums.StatusProjeto;
 import br.com.devweb.camadas.interfaces.ProjetoRepositoryInterface;
+import br.com.devweb.camadas.interfaces.ProjetoServiceInterface;
 import br.com.devweb.camadas.models.Projeto;
-import br.com.devweb.camadas.services.ProjetoService;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -16,7 +16,7 @@ import br.com.devweb.camadas.services.ProjetoService;
 public class ProjetoController {
 
   @Autowired
-  private ProjetoService projetoService;
+  private ProjetoServiceInterface projetoService;
 
   @Autowired
   private ProjetoRepositoryInterface projetoRepository;

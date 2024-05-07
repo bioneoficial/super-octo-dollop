@@ -77,6 +77,9 @@ public class OrcamentoController {
       if (novoOrcamento.getValor() != null) {
         orcamentoExistente.setValor(novoOrcamento.getValor());;
       }
+      if (novoOrcamento.getStatus_pagamento() != null) {
+        orcamentoExistente.setStatus_pagamento(novoOrcamento.getStatus_pagamento());
+      }
       orcamentoRepository.editarOrcamento(codigo, orcamentoExistente);
       return ResponseEntity.ok("Orcamento editado com sucesso");
     } else {

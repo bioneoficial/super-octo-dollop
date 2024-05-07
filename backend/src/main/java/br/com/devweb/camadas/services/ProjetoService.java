@@ -1,5 +1,6 @@
 package br.com.devweb.camadas.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +13,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import br.com.devweb.camadas.dto.CreateProjetoRequest;
 import br.com.devweb.camadas.enums.StatusProjeto;
 import br.com.devweb.camadas.interfaces.ProjetoRepositoryInterface;
+import br.com.devweb.camadas.interfaces.ProjetoServiceInterface;
 import br.com.devweb.camadas.models.Projeto;
 import br.com.devweb.camadas.validator.ProjetoValidator;
 
 @Service
-public class ProjetoService {
+public class ProjetoService implements ProjetoServiceInterface{
 
   @Autowired
   private ProjetoRepositoryInterface projetoRepository;
+
+
   public ResponseEntity<String> adicionarProjeto(@RequestBody CreateProjetoRequest projeto) {
 
     if(!ProjetoValidator.isValid(projeto.nome, projeto.descricao, projeto.status)) {
@@ -28,6 +32,11 @@ public class ProjetoService {
     Projeto proj = new Projeto(projetoRepository.getId() + 1, projeto.getNome(), projeto.getDescricao(), projeto.getData_inicio(), projeto.getData_termino(), projeto.status);
     projetoRepository.adicionarProjeto(proj);
     return ResponseEntity.status(HttpStatus.CREATED).body("Projeto adicionado com sucesso");
+  }
+  
+  public ResponseEntity<List<Projeto>> listarProjetos() {
+    List<Projeto> projetos = projetoRepository.listarProjetos();
+    return ResponseEntity.ok(projetos);
   }
 
   public ResponseEntity<String> removerProjeto(@PathVariable Long codigo) {
@@ -61,6 +70,12 @@ public class ProjetoService {
       }
       if (novoProjeto.getData_termino() != null) {
         projetoExistente.setData_termino(novoProjeto.getData_termino());
+      }
+      if (novoProjeto.getData_inicio() != null) {
+        projetoExistente.setData_inicio(novoProjeto.getData_inicio());
+      }
+      if (novoProjeto.getStatus() != null) {
+        projetoExistente.setStatus(novoProjeto.getStatus());
       }
       projetoRepository.editarProjeto(codigo, projetoExistente);
       return ResponseEntity.ok("Projeto editado com sucesso");
