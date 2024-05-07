@@ -31,7 +31,7 @@ public class OrcamentoController {
 
   @PostMapping
   public ResponseEntity<String> adicionarOrcamento(@RequestBody CreateOrcamentoRequest orcamento) {
-    Orcamento budget = new Orcamento(orcamentoRepository.getId() + 1, orcamento.getNome_empresa(), orcamento.getDescricao(), orcamento.getValor(), orcamento.getStatus_pagamento());
+    Orcamento budget = new Orcamento(orcamentoRepository.getId() + 1, orcamento.getNome_empresa(), orcamento.getDescricao(), orcamento.getValor(), orcamento.getStatus());
     orcamentoRepository.adicionarOrcamento(budget);
     return ResponseEntity.status(HttpStatus.CREATED).body("Orcamento adicionado com sucesso");
   }

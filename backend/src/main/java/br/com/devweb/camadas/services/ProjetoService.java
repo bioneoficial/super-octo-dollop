@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.devweb.camadas.dto.CreateProjetoRequest;
+import br.com.devweb.camadas.enums.StatusProjeto;
 import br.com.devweb.camadas.interfaces.ProjetoRepositoryInterface;
 import br.com.devweb.camadas.models.Projeto;
 import br.com.devweb.camadas.validator.ProjetoValidator;
@@ -24,7 +25,7 @@ public class ProjetoService {
     if(!ProjetoValidator.isValid(projeto.nome, projeto.descricao, projeto.status)) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nome, status e descrição são obrigatórios");
     }
-    Projeto proj = new Projeto(projetoRepository.getId() + 1, projeto.getNome(), projeto.getDescricao(), projeto.getData_inicio(), projeto.getTermino(), projeto.status);
+    Projeto proj = new Projeto(projetoRepository.getId() + 1, projeto.getNome(), projeto.getDescricao(), projeto.getData_inicio(), projeto.getData_termino(), projeto.status);
     projetoRepository.adicionarProjeto(proj);
     return ResponseEntity.status(HttpStatus.CREATED).body("Projeto adicionado com sucesso");
   }
@@ -43,6 +44,38 @@ public class ProjetoService {
     Optional<Projeto> projetoOptional = projetoRepository.buscarProjetoPorCodigo(codigo);
     if (projetoOptional.isPresent()) {
       return ResponseEntity.ok(projetoOptional.get());
+    } else {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  public ResponseEntity<String> editarProjeto(@PathVariable Long codigo, @RequestBody Projeto novoProjeto) {
+    Optional<Projeto> projetoOptional = projetoRepository.buscarProjetoPorCodigo(codigo);
+    if (projetoOptional.isPresent()) {
+      Projeto projetoExistente = projetoOptional.get();
+      if (novoProjeto.getNome() != null) {
+        projetoExistente.setNome(novoProjeto.getNome());
+      }
+      if (novoProjeto.getDescricao() != null) {
+        projetoExistente.setDescricao(novoProjeto.getDescricao());
+      }
+      if (novoProjeto.getData_termino() != null) {
+        projetoExistente.setData_termino(novoProjeto.getData_termino());
+      }
+      projetoRepository.editarProjeto(codigo, projetoExistente);
+      return ResponseEntity.ok("Projeto editado com sucesso");
+    } else {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  public ResponseEntity<String> atualizarStatusProjeto(@PathVariable Long codigo, @RequestBody StatusProjeto novoStatus) {
+    Optional<Projeto> projetoOptional = projetoRepository.buscarProjetoPorCodigo(codigo);
+    if (projetoOptional.isPresent()) {
+      Projeto projeto = projetoOptional.get();
+      projeto.setStatus(novoStatus.toString());
+      projetoRepository.editarProjeto(codigo, projeto);
+      return ResponseEntity.ok("Status do projeto atualizado com sucesso");
     } else {
       return ResponseEntity.notFound().build();
     }
