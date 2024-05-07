@@ -1,28 +1,15 @@
 package br.com.devweb.camadas.controllers;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import br.com.devweb.camadas.data.ProjetoRepository;
 import br.com.devweb.camadas.dto.CreateProjetoRequest;
 import br.com.devweb.camadas.enums.StatusPagamento;
 import br.com.devweb.camadas.models.Projeto;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-// import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -34,55 +21,72 @@ public class ProjetoController {
 
   // Rota para adicionar um projeto
   @PostMapping
-  public void adicionarProjeto(@RequestBody CreateProjetoRequest projeto) {
-
+  public ResponseEntity<String> adicionarProjeto(@RequestBody CreateProjetoRequest projeto) {
     Projeto proj = new Projeto(projetoRepository.getId() + 1, projeto.getNome(), projeto.getDescricao(), projeto.getData_inicio(), projeto.getTermino(), StatusPagamento.PENDENTE.toString());
     projetoRepository.adicionarProjeto(proj);
+    return ResponseEntity.status(HttpStatus.CREATED).body("Projeto adicionado com sucesso");
   }
 
   // Rota para remover um projeto específico
   @DeleteMapping("/{codigo}")
-  public void removerProjeto(@PathVariable Long codigo) {
-      Optional<Projeto> projeto = projetoRepository.buscarProjetoPorCodigo(codigo);
-      projeto.ifPresent(projetoRepository::removerProjeto);
+  public ResponseEntity<String> removerProjeto(@PathVariable Long codigo) {
+    Optional<Projeto> projeto = projetoRepository.buscarProjetoPorCodigo(codigo);
+    if (projeto.isPresent()) {
+      projetoRepository.removerProjeto(projeto.get());
+      return ResponseEntity.ok("Projeto removido com sucesso");
+    } else {
+      return ResponseEntity.notFound().build();
+    }
   }
 
   @GetMapping
-  public List<Projeto> listarProjetos() {
-    return projetoRepository.listarProjetos();
+  public ResponseEntity<List<Projeto>> listarProjetos() {
+    List<Projeto> projetos = projetoRepository.listarProjetos();
+    return ResponseEntity.ok(projetos);
   }
 
   @GetMapping("/{codigo}")
-  public Optional<Projeto> buscarProjetoPorId(@PathVariable Long codigo) {
-    System.out.println("Buscando projeto com o código: " + codigo);
-    return projetoRepository.buscarProjetoPorCodigo(codigo);
+  public ResponseEntity<Projeto> buscarProjetoPorId(@PathVariable Long codigo) {
+    Optional<Projeto> projetoOptional = projetoRepository.buscarProjetoPorCodigo(codigo);
+    if (projetoOptional.isPresent()) {
+      return ResponseEntity.ok(projetoOptional.get());
+    } else {
+      return ResponseEntity.notFound().build();
+    }
   }
 
-   @PutMapping("/{codigo}")
-    public void editarProjeto(@PathVariable Long codigo, @RequestBody Projeto novoProjeto) {
-        Optional<Projeto> projetoOptional = projetoRepository.buscarProjetoPorCodigo(codigo);
-        projetoOptional.ifPresent(projeto -> {
-            if (novoProjeto.getNome() != null) {
-                projeto.setNome(novoProjeto.getNome());
-            }
-            if (novoProjeto.getDescricao() != null) {
-                projeto.setDescricao(novoProjeto.getDescricao());
-            }
-            if (novoProjeto.getData_termino() != null) {
-                projeto.setData_termino(novoProjeto.getData_termino());
-            }
-            projetoRepository.editarProjeto(codigo, novoProjeto);
-        });
+  @PutMapping("/{codigo}")
+  public ResponseEntity<String> editarProjeto(@PathVariable Long codigo, @RequestBody Projeto novoProjeto) {
+    Optional<Projeto> projetoOptional = projetoRepository.buscarProjetoPorCodigo(codigo);
+    if (projetoOptional.isPresent()) {
+      Projeto projetoExistente = projetoOptional.get();
+      if (novoProjeto.getNome() != null) {
+        projetoExistente.setNome(novoProjeto.getNome());
+      }
+      if (novoProjeto.getDescricao() != null) {
+        projetoExistente.setDescricao(novoProjeto.getDescricao());
+      }
+      if (novoProjeto.getData_termino() != null) {
+        projetoExistente.setData_termino(novoProjeto.getData_termino());
+      }
+      projetoRepository.editarProjeto(codigo, projetoExistente);
+      return ResponseEntity.ok("Projeto editado com sucesso");
+    } else {
+      return ResponseEntity.notFound().build();
     }
+  }
 
-    // Rota para atualizar a situação de um projeto
-    @PutMapping("/{codigo}/status")
-    public void atualizarStatusProjeto(@PathVariable Long codigo, @RequestBody StatusPagamento novoStatus) {
-        Optional<Projeto> projetoOptional = projetoRepository.buscarProjetoPorCodigo(codigo);
-        projetoOptional.ifPresent(projeto -> {
-            projeto.setStatus(novoStatus.toString());
-            projetoRepository.editarProjeto(codigo, projeto);
-        });
+  // Rota para atualizar a situação de um projeto
+  @PutMapping("/{codigo}/status")
+  public ResponseEntity<String> atualizarStatusProjeto(@PathVariable Long codigo, @RequestBody StatusPagamento novoStatus) {
+    Optional<Projeto> projetoOptional = projetoRepository.buscarProjetoPorCodigo(codigo);
+    if (projetoOptional.isPresent()) {
+      Projeto projeto = projetoOptional.get();
+      projeto.setStatus(novoStatus.toString());
+      projetoRepository.editarProjeto(codigo, projeto);
+      return ResponseEntity.ok("Status do projeto atualizado com sucesso");
+    } else {
+      return ResponseEntity.notFound().build();
     }
-
+  }
 }
