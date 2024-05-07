@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import br.com.devweb.camadas.data.ProjetoRepository;
 import br.com.devweb.camadas.dto.CreateProjetoRequest;
-import br.com.devweb.camadas.enums.StatusPagamento;
+import br.com.devweb.camadas.enums.StatusProjeto;
 import br.com.devweb.camadas.models.Projeto;
 
 @RestController
@@ -19,15 +19,13 @@ public class ProjetoController {
   @Autowired
   private ProjetoRepository projetoRepository;
 
-  // Rota para adicionar um projeto
   @PostMapping
   public ResponseEntity<String> adicionarProjeto(@RequestBody CreateProjetoRequest projeto) {
-    Projeto proj = new Projeto(projetoRepository.getId() + 1, projeto.getNome(), projeto.getDescricao(), projeto.getData_inicio(), projeto.getTermino(), StatusPagamento.PENDENTE.toString());
+    Projeto proj = new Projeto(projetoRepository.getId() + 1, projeto.getNome(), projeto.getDescricao(), projeto.getData_inicio(), projeto.getTermino(), StatusProjeto.PENDENTE.toString());
     projetoRepository.adicionarProjeto(proj);
     return ResponseEntity.status(HttpStatus.CREATED).body("Projeto adicionado com sucesso");
   }
 
-  // Rota para remover um projeto específico
   @DeleteMapping("/{codigo}")
   public ResponseEntity<String> removerProjeto(@PathVariable Long codigo) {
     Optional<Projeto> projeto = projetoRepository.buscarProjetoPorCodigo(codigo);
@@ -76,9 +74,8 @@ public class ProjetoController {
     }
   }
 
-  // Rota para atualizar a situação de um projeto
   @PutMapping("/{codigo}/status")
-  public ResponseEntity<String> atualizarStatusProjeto(@PathVariable Long codigo, @RequestBody StatusPagamento novoStatus) {
+  public ResponseEntity<String> atualizarStatusProjeto(@PathVariable Long codigo, @RequestBody StatusProjeto novoStatus) {
     Optional<Projeto> projetoOptional = projetoRepository.buscarProjetoPorCodigo(codigo);
     if (projetoOptional.isPresent()) {
       Projeto projeto = projetoOptional.get();

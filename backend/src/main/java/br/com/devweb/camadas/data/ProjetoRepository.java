@@ -15,17 +15,14 @@ public class ProjetoRepository {
   
   private List<Projeto> projetos = new ArrayList<>();
 
-  // Método para adicionar um projeto
   public void adicionarProjeto(Projeto projeto) {
     projetos.add(projeto);
   }
 
-  // Método para remover um projeto específico
   public void removerProjeto(Projeto projeto) {
       projetos.remove(projeto);
   }
 
-  // Método para listar todos os projetos
   public List<Projeto> listarProjetos() {
       return projetos;
   }
@@ -33,7 +30,6 @@ public class ProjetoRepository {
   public long getId() {
     return projetos.size();
   }
-  // Método para buscar um projeto específico pelo ID
   public Optional<Projeto> buscarProjetoPorCodigo(Long codigo) {
       return projetos.stream()
                     .filter(projeto -> projeto.getCodigo() == codigo)
