@@ -30,8 +30,11 @@ public class ProjetoRepository {
       return projetos;
   }
 
+  public long getId() {
+    return projetos.size();
+  }
   // Método para buscar um projeto específico pelo ID
-  public Optional<Projeto> buscarProjetoPorId(Long codigo) {
+  public Optional<Projeto> buscarProjetoPorCodigo(Long codigo) {
       return projetos.stream()
                     .filter(projeto -> projeto.getCodigo() == codigo)
                     .findFirst();

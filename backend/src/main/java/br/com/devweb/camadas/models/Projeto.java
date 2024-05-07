@@ -11,4 +11,13 @@ public class Projeto {
   private String data_termino;
   private String status;
 
+  public Projeto(long id, String nome, String descricao, String dataInicio, String dataFim, String statusPagamento) {
+    this.codigo = id;
+    this.nome = nome;
+    this.descricao = descricao;
+    this.data_inicio = dataInicio;
+    this.data_termino = dataFim;
+    this.status = statusPagamento;
+}
+
 }
