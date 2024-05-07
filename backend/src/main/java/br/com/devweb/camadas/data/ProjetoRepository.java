@@ -20,20 +20,20 @@ public class ProjetoRepository {
   }
 
   public void removerProjeto(Projeto projeto) {
-      projetos.remove(projeto);
+    projetos.remove(projeto);
   }
 
   public List<Projeto> listarProjetos() {
-      return projetos;
+    return projetos;
   }
 
   public long getId() {
     return projetos.size();
   }
   public Optional<Projeto> buscarProjetoPorCodigo(Long codigo) {
-      return projetos.stream()
-                    .filter(projeto -> projeto.getCodigo() == codigo)
-                    .findFirst();
+    return projetos.stream()
+                  .filter(projeto -> projeto.getCodigo() == codigo)
+                  .findFirst();
   }
 
   public boolean editarProjeto(Long codigo, Projeto projetoAtualizado) {
