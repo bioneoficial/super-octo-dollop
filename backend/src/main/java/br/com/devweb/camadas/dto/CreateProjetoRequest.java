@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ProjetoRequest {
+public class CreateProjetoRequest {
   
   public String nome;
   public String descricao;

@@ -40,4 +40,16 @@ public class ProjetoRepository {
                     .findFirst();
   }
 
+  public boolean editarProjeto(Long codigo, Projeto projetoAtualizado) {
+    Optional<Projeto> projetoOptional = buscarProjetoPorCodigo(codigo);
+    if (projetoOptional.isPresent()) {
+      Projeto projetoExistente = projetoOptional.get();
+      projetoExistente.setNome(projetoAtualizado.getNome());
+      projetoExistente.setDescricao(projetoAtualizado.getDescricao());
+      projetoExistente.setData_termino(projetoAtualizado.getData_termino());
+      return true; 
+    }
+    return false; 
+  }
+
 }
