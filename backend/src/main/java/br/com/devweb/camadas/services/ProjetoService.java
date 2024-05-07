@@ -60,6 +60,10 @@ public class ProjetoService implements ProjetoServiceInterface{
 
   public ResponseEntity<String> editarProjeto(@PathVariable Long codigo, @RequestBody Projeto novoProjeto) {
     Optional<Projeto> projetoOptional = projetoRepository.buscarProjetoPorCodigo(codigo);
+
+    if (!ProjetoValidator.isValid(novoProjeto.getNome(), novoProjeto.getDescricao(), novoProjeto.getStatus())) 
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nome, status e descrição são obrigatórios");
+
     if (projetoOptional.isPresent()) {
       Projeto projetoExistente = projetoOptional.get();
       if (novoProjeto.getNome() != null) {
