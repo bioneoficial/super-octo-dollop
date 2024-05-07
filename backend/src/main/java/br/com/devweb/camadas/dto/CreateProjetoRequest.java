@@ -9,4 +9,6 @@ public class CreateProjetoRequest {
   
   public String nome;
   public String descricao;
+  public String data_inicio;
+  public String termino;
 }

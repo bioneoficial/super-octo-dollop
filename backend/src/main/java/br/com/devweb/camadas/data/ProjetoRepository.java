@@ -47,6 +47,7 @@ public class ProjetoRepository {
       projetoExistente.setNome(projetoAtualizado.getNome());
       projetoExistente.setDescricao(projetoAtualizado.getDescricao());
       projetoExistente.setData_termino(projetoAtualizado.getData_termino());
+      projetoExistente.setData_inicio(projetoAtualizado.getData_inicio());
       return true; 
     }
     return false; 

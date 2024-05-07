@@ -36,7 +36,7 @@ public class ProjetoController {
   @PostMapping
   public void adicionarProjeto(@RequestBody CreateProjetoRequest projeto) {
 
-    Projeto proj = new Projeto(projetoRepository.getId() + 1, projeto.getNome(), projeto.getDescricao(), new Date().toString(), new Date().toString(), StatusPagamento.PENDENTE.toString());
+    Projeto proj = new Projeto(projetoRepository.getId() + 1, projeto.getNome(), projeto.getDescricao(), projeto.getData_inicio(), projeto.getTermino(), StatusPagamento.PENDENTE.toString());
     projetoRepository.adicionarProjeto(proj);
   }
 
@@ -81,9 +81,6 @@ public class ProjetoController {
         Optional<Projeto> projetoOptional = projetoRepository.buscarProjetoPorCodigo(codigo);
         projetoOptional.ifPresent(projeto -> {
             projeto.setStatus(novoStatus.toString());
-            if (novoStatus == StatusPagamento.APROVADO) {
-                projeto.setData_inicio(new Date().toString());
-            }
             projetoRepository.editarProjeto(codigo, projeto);
         });
     }
